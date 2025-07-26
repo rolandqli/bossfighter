@@ -14,6 +14,11 @@ public class Player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //Transform child = transform.Find("Rig");
+        //if (child != null)
+        //{
+        //    rb = child.gameObject.GetComponent<Rigidbody>();
+        //}
         rb = GetComponent<Rigidbody>();
         Debug.Log(HPSlider);
         HPSlider.value = 1;
