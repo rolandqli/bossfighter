@@ -15,6 +15,21 @@ public class Boss : MonoBehaviour
 
     }
 
+    public void takeDamage(float damage)
+    {
+        currHP -= damage;
+        HPSlider.value = currHP / totalHP;
+        if (currHP < 0)
+        {
+            Death();
+        }
+    }
+
+    void Death()
+    {
+
+    }
+
 // Update is called once per frame
 void Update()
     {

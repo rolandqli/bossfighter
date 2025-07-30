@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+
 
 public class Player : MonoBehaviour
 {
@@ -10,7 +12,7 @@ public class Player : MonoBehaviour
     public Slider HPSlider;
     public Transform cameraTransform;
     public Animator anim;
-
+    private bool isKicking;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -34,8 +36,10 @@ public class Player : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
-        if (x != 0 || z != 0)
+        if ((x != 0 || z != 0) && !isKicking)
         {
+            anim.SetBool("Run", true);
+
             Vector3 inputDir = new Vector3(x, 0, z);
 
             Vector3 cameraZ = cameraTransform.forward;
@@ -45,25 +49,32 @@ public class Player : MonoBehaviour
             Vector3 relativeDir = cameraZ * z + cameraX * x;
             Quaternion targetRotation = Quaternion.LookRotation(relativeDir);
 
-            //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
             rb.MovePosition(rb.position + relativeDir * moveSpeed * Time.fixedDeltaTime);
         }
-        //else
-        //{
-        //    anim.SetBool("Run", false);
-        //}
+        else
+        {
+            anim.SetBool("Run", false);
+        }
         if (Input.GetMouseButtonDown(0)) 
         {
+
+            StartCoroutine(Kick());
+        }
+
+        IEnumerator Kick()
+        {
+            isKicking = true;
             anim.SetTrigger("Kick");
+            yield return new WaitForSeconds(1.3f);
+            isKicking = false;
         }
 
 
         //anim.SetFloat("Speed", speed);s
-        void OnCollisionEnter(Collision collision)
-        {
-            Debug.Log("Collided with: " + collision.gameObject.name);
-        }
+        
 
 
     }
+    
 }
